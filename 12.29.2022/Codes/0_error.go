@@ -6,7 +6,7 @@ import (
 )
 
 func main() {  
-    f, err := os.Open("/12.29.2022 Golang Lesson Instruction.docx")
+    f, err := os.Open("../12.29.2022 Golang Lesson Instruction.docx")
     if err != nil {
         fmt.Println(err)
         return
