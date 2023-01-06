@@ -1,0 +1,2 @@
+writing some data into a file
+I am being written to txt file!
