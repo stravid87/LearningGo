@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"github link"
+	"https://github.com/globe-and-citizen/LearningGo/tree/main/01.05.2023/Codes"
 )
 
 type dogs struct{
