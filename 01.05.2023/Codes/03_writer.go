@@ -12,7 +12,7 @@ func main() {
     }
     defer f.Close()
 
-    n, err := f.Write([]byte("I am being written to txt file!"))
+    n, err := f.Write([]byte("I am talking with Ravi!"))
     if err != nil {
         panic(err)
     }

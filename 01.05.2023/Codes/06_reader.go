@@ -14,7 +14,7 @@ func main() {
 
     // Make a byte slice that's big enough to store a few words of the message
     // we're reading
-    bytesRead := make([]byte, 35)
+    bytesRead := make([]byte, 5)
 
     // Now read some data, passing in our byte slice
     n, err := file.Read(bytesRead)
