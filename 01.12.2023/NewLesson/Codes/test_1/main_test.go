@@ -9,7 +9,7 @@ func TestMySum(t *testing.T) {
 	}
 
 	tests := []test{
-		test{[]int{3, 4}, 8},
+		test{[]int{3, 4}, 9},
 		test{[]int{4, 5, 6, 7}, 22},
 		test{[]int{1, 0}, 1},
 		test{[]int{3, 5, -2}, 6},
