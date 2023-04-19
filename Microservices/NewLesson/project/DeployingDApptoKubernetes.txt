@@ -1,0 +1,38 @@
+Step 1
+Installing minikube
+Step 2 
+--> Installing kubectl
+Step 3 Command
+--> minikube delete
+Step 4 Command
+--> minikube start --nodes=2
+Step 5 Command
+--> minikube status
+
+
+Extra Command
+--> minikube stop
+--> minikube start
+--> minikube dashboard // for seeing dashboard
+
+Applying mongo.yml
+--> kubectl apply -f k8s
+
+--> kubectl get pods
+--> kubectl get svc
+--> kubectl get deployment
+
+
+For seeing log of services
+--> kubectl logs <service name>
+For getting service name
+--> kubectl get pods
+--> minikube logs
+
+
+EXPOSING
+--> kubectl expose deployment broker-service --type=LoadBalancer --port=8080 --target-port=8080
+--> minikube tunnel
+
+Adding an nginx Ingress to our cluster
+--> minikube addons enable ingress
