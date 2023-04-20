@@ -36,3 +36,9 @@ EXPOSING
 
 Adding an nginx Ingress to our cluster
 --> minikube addons enable ingress
+
+-----------------------------------------------------------------------------------------
+
+TESTING
+
+--> go test -v .
