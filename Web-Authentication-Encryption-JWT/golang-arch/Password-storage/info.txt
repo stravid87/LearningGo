@@ -1,2 +1,15 @@
 https://pkg.go.dev/golang.org/x/crypto/bcrypt
 
+Storing password
+
+    never store passwords
+    instead, store one-way encryption "hash" values of the password
+    for added security
+        hash on the client
+        hash THAT again on the server
+    hashing algorithms
+        bcrypt - current choice
+        scrypt - new choice
+
+Hashing password
+    
