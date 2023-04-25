@@ -1,0 +1,9 @@
+Bearer Tokens & HMAC
+
+bearer tokens 
+    added to http spec with OAUTH2
+    uses authorization header & keyword "bearer"
+to prevent faked bearer tokens, use cryptographic "signing"
+HMAC - Hash Message Authentication Code
+Resource: https://godoc.org/crypto/hmac 
+
