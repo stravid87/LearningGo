@@ -1,0 +1,31 @@
+About Authentication and Authorization
+https://www.cyberciti.biz/faq/authentication-vs-authorization/
+
+Authentication
+    Determines who you are
+    Verifies that no-one is impersonating you
+    three ways to authenticate
+        who you are (biometrics)
+        what you have (eg, atm card; key; phone...)
+        what you know (username; password, ...)
+    two-factor authentication
+
+Authorization
+    Says what you are allowed to do
+    The name of the http header used for authentication
+
+
+Http Basic Authentication
+    Basic authentication part of the specification of http
+        send username / password with every request
+        uses authorization header & keyword "basic"
+            put "username:password" together
+            converts them to base64
+                puts generic binary data into printable
+                base64 is reversible
+                    never use with http; only https
+                use basic authentication to login
+
+
+# command for getting from curl Authorization
+--> curl -u user:pass -v google.com 
