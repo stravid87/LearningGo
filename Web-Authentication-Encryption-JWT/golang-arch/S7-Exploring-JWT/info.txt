@@ -6,3 +6,4 @@ https://github.com/dgrijalva/jwt-go
 #StandardClaims
 https://pkg.go.dev/github.com/golang-jwt/jwt/v4#StandardClaims
 
+JWT - JSON Web Token
