@@ -9,7 +9,7 @@ import (
 
 func main() {
 	h := sha256.New()
-	io.WriteString(h, "hello")
+	io.WriteString(h, "hello world")
 	s := h.Sum(nil)
 	fmt.Println(hex.EncodeToString(s))
 }

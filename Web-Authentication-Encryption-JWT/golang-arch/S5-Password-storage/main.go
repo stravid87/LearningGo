@@ -15,6 +15,7 @@ func main() {
 		panic(err)
 	}
 
+	// bs (hash) is ready
 	err = comparePassword(pass, hashedPass)
 	if err != nil {
 		log.Fatalln("Not Logged in")

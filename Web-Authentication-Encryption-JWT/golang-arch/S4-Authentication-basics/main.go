@@ -6,7 +6,7 @@ import (
 )
 
 func main() {
-	fmt.Println(base64.StdEncoding.EncodeToString([]byte("user:pass")))
+	fmt.Println(base64.StdEncoding.EncodeToString([]byte("ravi:123456789")))
 }
 
 // Continued on Password-storage folder
