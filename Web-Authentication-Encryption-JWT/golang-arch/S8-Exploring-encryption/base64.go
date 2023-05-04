@@ -7,7 +7,7 @@ import (
 )
 
 func main() {
-	msg := "Lorem Ipsum is simply dummy text of the printing and typesetting industry. "
+	msg := "There are few couple potentially more A than the duo of Brad Pitt and Angelina Jolie who met on the set of Mr & Mrs Smith."
 	encoded := encode(msg)
 	fmt.Println("ENCODED", encoded)
 
