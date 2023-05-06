@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"strings"
 )
 
 func main() {
@@ -17,7 +18,7 @@ func main() {
 func getCode(msg string) string {
 	h := hmac.New(sha256.New, []byte("I love thursday when it rains"))
 	h.Write([]byte(msg))
-	return fmt.Sprint("%x", h.Sum(nil))
+	return fmt.Sprintf("%x", h.Sum(nil))
 }
 
 func bar (w http.ResponseWriter, r *http.Request) {
@@ -45,10 +46,27 @@ func bar (w http.ResponseWriter, r *http.Request) {
 }
 
 func foo(w http.ResponseWriter, r *http.Request) {
-	c, err := r.Cookies("session")
+	c, err := r.Cookie("session")
 	if err != nil {
 		c = &http.Cookie{}
 	}
+
+	isEqual := true
+	xs :=  strings.SplitN(c.Value, "|", 2)
+	if len(xs) == 2 {
+		cCode := xs[0]
+		cEmail := xs[1]
+
+		code := getCode(cEmail)
+		isEqual = hmac.Equal([]byte(cCode), []byte(code))
+	}
+
+	message := "Not logged in"
+	if isEqual {
+		message = "Logged in"
+	}
+
+
 	html := `<!DOCTYPE html>
 	<html>
 		<head>
@@ -61,6 +79,7 @@ func foo(w http.ResponseWriter, r *http.Request) {
 		</head>
 		<body>
 			<p>` + c.Value + `</p>
+			<p>` + message + `</p>
 			<form action="/submit" method="post">
 				<input type="email" name="email">
 				<input type="submit">
