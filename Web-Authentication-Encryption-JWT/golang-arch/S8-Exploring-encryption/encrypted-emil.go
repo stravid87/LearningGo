@@ -31,13 +31,13 @@ func main() {
 	if err != nil {
 		log.Fatalln(err)
 	}
-	fmt.Println("ENCRYPTED TEXT", string(rslt))
+	fmt.Println("before base64", string(rslt))
 
 	rslt2, err := enDecode(bs, string(rslt))
 	if err != nil {
 		log.Fatalln(err)
 	}
-	fmt.Println("DECRYPTED TEXT", string(rslt2))
+	fmt.Println(string(rslt2))
 }
 
 func enDecode(key []byte, input string) ([]byte, error) {
