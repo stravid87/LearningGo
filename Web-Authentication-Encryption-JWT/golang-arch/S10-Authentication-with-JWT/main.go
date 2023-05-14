@@ -22,8 +22,7 @@ type myClaims struct {
 
 const myKey = "I love thursday when it rains"
 
-func getJWT(msg string) string {
-
+func getJWT(msg string) (string, error) {
 	claims := myClaims{
 		StandardClaims: jwt.StandardClaims{
 			ExpiresAt: time.Now().Add(5 * time.Minute).Unix(),
@@ -31,7 +30,7 @@ func getJWT(msg string) string {
 		Email: msg,
 	}
 
-	token := jwt.NewWithClaims(jwt.SigningMethodES256, &claims)
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, &claims)
 	ss, err := token.SignedString([]byte(myKey))
 	if err != nil {
 		return "", fmt.Errorf("couldn't SignedSting %w", err)
@@ -54,10 +53,11 @@ func bar(w http.ResponseWriter, r *http.Request) {
 	ss, err := getJWT(email)
 	if err != nil {
 		http.Error(w, "couldn't getJWT", http.StatusInternalServerError)
+		return
 	}
 
 	c := http.Cookie{
-		Name: "session",
+		Name:  "session",
 		Value: ss,
 	}
 
@@ -74,6 +74,9 @@ func foo(w http.ResponseWriter, r *http.Request) {
 
 	ss := c.Value
 	afterVerificationToken, err := jwt.ParseWithClaims(ss, &myClaims{}, func(beforeVeritificationToken *jwt.Token) (interface{}, error) {
+		if beforeVeritificationToken.Method.Alg() != jwt.SigningMethodES256.Alg() {
+			return nil, fmt.Errorf("SOMEONE TRIED TO HACK chnaged sigining method")
+		}
 		return []byte(myKey), nil
 	})
 
@@ -82,9 +85,9 @@ func foo(w http.ResponseWriter, r *http.Request) {
 	// ... method which means it implements the Claims interface ...
 	//
 	/*
-	type Claims interface {
-		Valid() error
-	}
+		type Claims interface {
+			Valid() error
+		}
 	*/
 	//
 	// ... when you ParseClaims as with "ParseWithClaims" ...
@@ -92,8 +95,8 @@ func foo(w http.ResponseWriter, r *http.Request) {
 	// ... and if all is well, then returns no "error" and
 	// type TOKEN which has a field VALID will be true
 
-	isEqual := afterVerificationToken.Valid && err == nil
-
+	isEqual := err == nil && afterVerificationToken.Valid
+	
 	message := "Not logged in"
 	if isEqual {
 		message = "Logged in"
@@ -101,7 +104,7 @@ func foo(w http.ResponseWriter, r *http.Request) {
 		fmt.Println(claims.Email)
 		fmt.Println(claims.ExpiresAt)
 	}
-	
+
 	html := `<!DOCTYPE html>
 	<html>
 		<head>
