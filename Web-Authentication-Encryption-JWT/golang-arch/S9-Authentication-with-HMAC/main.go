@@ -21,7 +21,7 @@ func getCode(msg string) string {
 	return fmt.Sprintf("%x", h.Sum(nil))
 }
 
-func bar (w http.ResponseWriter, r *http.Request) {
+func bar(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		http.Redirect(w, r, "/", http.StatusSeeOther)
 		return
