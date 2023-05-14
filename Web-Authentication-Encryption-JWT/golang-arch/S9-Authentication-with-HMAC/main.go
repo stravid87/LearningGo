@@ -42,7 +42,6 @@ func bar (w http.ResponseWriter, r *http.Request) {
 
 	http.SetCookie(w, &c)
 	http.Redirect(w, r, "/", http.StatusSeeOther)
-
 }
 
 func foo(w http.ResponseWriter, r *http.Request) {
