@@ -75,7 +75,7 @@ func foo(w http.ResponseWriter, r *http.Request) {
 	ss := c.Value
 	afterVerificationToken, err := jwt.ParseWithClaims(ss, &myClaims{}, func(beforeVeritificationToken *jwt.Token) (interface{}, error) {
 		if beforeVeritificationToken.Method.Alg() != jwt.SigningMethodES256.Alg() {
-			return nil, fmt.Errorf("SOMEONE TRIED TO HACK chnaged sigining method")
+			return nil, fmt.Errorf("SOMEONE TRIED TO HACK changed sigining method")
 		}
 		return []byte(myKey), nil
 	})
