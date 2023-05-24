@@ -75,9 +75,9 @@ func index(w http.ResponseWriter, r *http.Request) {
 			<link rel="stylesheet" href="">
 		</head>
 		<body>
-			<h1>YOU HAVE SESSION, HERE IS YOUR NAME: %s</h1>
-			<h1>YOU HAVE SESSION, HERE IS YOUR EMAIL: %s</h1>
-			<h1>IF THERE IS ANY MESSAGE FOR YOU, HERE IT IS: %s</h1>
+			<h1>YOU HAVE SESSION, HERE IS YOUR NAME: %s </h1>
+			<h1>YOU HAVE SESSION, HERE IS YOUR EMAIL: %s </h1>
+			<h1>IF THERE IS ANY MESSAGE FOR YOU, HERE IT IS: %s </h1>
             <h1>REGISTER</h1>
 			<form action="/register" method="POST">
 				<label for="first">First</label>

@@ -73,7 +73,8 @@ func foo(w http.ResponseWriter, r *http.Request) {
 	}
 
 	ss := c.Value
-	afterVerificationToken, err := jwt.ParseWithClaims(ss, &myClaims{}, func(beforeVeritificationToken *jwt.Token) (interface{}, error) {
+	afterVerificationToken, err := jwt.ParseWithClaims(ss, &myClaims{}, 
+	func(beforeVeritificationToken *jwt.Token) (interface{}, error) {
 		if beforeVeritificationToken.Method.Alg() != jwt.SigningMethodES256.Alg() {
 			return nil, fmt.Errorf("SOMEONE TRIED TO HACK changed sigining method")
 		}
@@ -118,7 +119,7 @@ func foo(w http.ResponseWriter, r *http.Request) {
 		<body>
 			<p>` + c.Value + `</p>
 			<p>` + message + `</p>
-			<form action="/submit" method="post">
+			<form action="/submit" method="postd">
 				<input type="email" name="emailThing">
 				<input type="submit">
 			</form>

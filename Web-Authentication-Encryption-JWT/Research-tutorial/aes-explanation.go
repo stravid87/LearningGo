@@ -27,7 +27,6 @@ func main() {
 }
  
 func EncryptAES(key []byte, plaintext string) string {
- 
     c, err := aes.NewCipher(key)
     CheckError(err)
  
