@@ -15,7 +15,7 @@ import (
 var githubConnections map[string]string
 
 type githubResponse struct {
-	Data struct{
+	Data struct {
 		Viewer struct {
 			ID string `json:"id"`
 		} `json: "viewer"`
@@ -23,9 +23,9 @@ type githubResponse struct {
 }
 
 var githubOauthConfig = &oauth2.Config{
-	ClientID: "233ac783feea25fadb1f",
+	ClientID:     "233ac783feea25fadb1f",
 	ClientSecret: "7d357c9ddd38cd5fa821a9d60431287f4d5538a8",
-	Endpoint: github.Endpoint,
+	Endpoint:     github.Endpoint,
 }
 
 func main() {
@@ -63,7 +63,7 @@ func completeGithubOauth(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("something")
 	code := r.FormValue("code")
 	state := r.FormValue("state")
-	
+
 	if state != "0000" {
 		http.Error(w, "State is incorrect", http.StatusBadRequest)
 		return
@@ -93,7 +93,21 @@ func completeGithubOauth(w http.ResponseWriter, r *http.Request) {
 	}
 
 	log.Println(string(bs))
-	
+
+	fmt.Fprint(w, `<!DOCTYPE html>
+	<html>
+		<head>
+			<meta charset="utf-8">
+			<meta http-equiv="X-UA-Compatible" content="IE=edge">
+			<title>Document</title>
+			<meta name="description" content="">
+			<meta name="viewport" content="width=device-width, initial-scale=1">
+			<link rel="stylesheet" href="">
+		</head>
+		<body>
+			<h1>This is code that coming from github: %s </h1>
+		</body>
+	</html>`,code)
 	// var gr githubResponse
 	// err = json.NewDecoder(resp.Body).Decode(&gr)
 	// if err != nil {
@@ -109,4 +123,3 @@ func completeGithubOauth(w http.ResponseWriter, r *http.Request) {
 	// }
 	// fmt.Println(userID)
 }
-
