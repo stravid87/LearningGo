@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"io"
+	"log"
 	"net/http"
 	"time"
 
@@ -45,6 +46,7 @@ func bar(w http.ResponseWriter, r *http.Request) {
 	}
 
 	email := r.FormValue("emailThing")
+	log.Println("email")
 	if email == "" {
 		http.Redirect(w, r, "/", http.StatusSeeOther)
 		return
@@ -73,13 +75,13 @@ func foo(w http.ResponseWriter, r *http.Request) {
 	}
 
 	ss := c.Value
-	afterVerificationToken, err := jwt.ParseWithClaims(ss, &myClaims{}, 
-	func(beforeVeritificationToken *jwt.Token) (interface{}, error) {
-		if beforeVeritificationToken.Method.Alg() != jwt.SigningMethodES256.Alg() {
-			return nil, fmt.Errorf("SOMEONE TRIED TO HACK changed sigining method")
-		}
-		return []byte(myKey), nil
-	})
+	afterVerificationToken, err := jwt.ParseWithClaims(ss, &myClaims{},
+		func(beforeVeritificationToken *jwt.Token) (interface{}, error) {
+			if beforeVeritificationToken.Method.Alg() != jwt.SigningMethodES256.Alg() {
+				return nil, fmt.Errorf("SOMEONE TRIED TO HACK changed sigining method")
+			}
+			return []byte(myKey), nil
+		})
 
 	// StandardClaims has the ...
 	// Valid() error
@@ -97,7 +99,7 @@ func foo(w http.ResponseWriter, r *http.Request) {
 	// type TOKEN which has a field VALID will be true
 
 	isEqual := err == nil && afterVerificationToken.Valid
-	
+
 	message := "Not logged in"
 	if isEqual {
 		message = "Logged in"
@@ -119,7 +121,7 @@ func foo(w http.ResponseWriter, r *http.Request) {
 		<body>
 			<p>` + c.Value + `</p>
 			<p>` + message + `</p>
-			<form action="/submit" method="postd">
+			<form action="/submit" method="post">
 				<input type="email" name="emailThing">
 				<input type="submit">
 			</form>

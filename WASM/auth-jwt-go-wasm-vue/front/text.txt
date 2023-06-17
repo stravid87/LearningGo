@@ -1,0 +1,5 @@
+To create main.wasm run this command
+GOOS=js GOARCH=wasm go build -o front/main.wasm wasm/main.go
+
+For wasm_exec function run this command
+cp "$(go env GOROOT)/misc/wasm/wasm_exec.js" ./front

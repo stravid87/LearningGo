@@ -1,0 +1,50 @@
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <script src="wasm_exec.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.10/dist/vue.min.js"></script>
+    <script>
+        const go = new Go();
+        WebAssembly.instantiateStreaming(fetch("main.wasm"), go.importObject).then((result) => {
+            go.run(result.instance);
+        });
+    </script>
+</head>
+<body>
+<div id="auth-JWT">
+    <div>
+        {{ session }}
+    </div>
+	<input v-model="emailThing" type="email" name="emailThing">
+	<button v-on:click="authJWT">Submit</button>
+</div>
+<script>
+var authWithJWT = new Vue({
+    el: '#auth-JWT',
+    data: {
+        emailThing: "",
+        session: "Not logged in",
+    },
+    methods: {
+        authJWT: function () {
+            const emailForAuth = this.emailThing
+
+            const result = authorizationJWT(emailForAuth);
+
+            document.cookie = `session=${result}; path=/`;
+        },
+        getCookie(name) {
+            const value = `; ${document.cookie}`;
+            const parts = value.split(`; ${name}=`);
+            if (parts.length === 2) {
+                return parts.pop().split(';').shift();
+            }
+        },
+    },
+    created() {
+        this.session = this.getCookie('session');
+    }
+})
+</script>
+</body>
+</html>
