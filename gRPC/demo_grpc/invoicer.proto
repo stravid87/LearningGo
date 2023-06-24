@@ -1,5 +1,6 @@
 syntax = "proto3";
-option go_package = "github.com/maximilienandile/demo-grpc/invoicer";
+
+option go_package = "github.com/globe-and-citizen/LearningGo/tree/main/gRPC/demo_grpc/invoicer";
 
 message Amount {
     int64 amount = 1;

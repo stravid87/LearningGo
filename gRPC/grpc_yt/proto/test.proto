@@ -18,7 +18,19 @@ message UserRequest {
 }
 
 message UserResponse {
-    string name = 1;
+    string name = 1; // This field represents the data to be responded. It is also of type bytes is assigned a field numebr 1.
     int32 age = 2;
     string email = 3;
 }
+
+// Field numbers in Protocol Buffers are uniquem identifiers for each field within a message type.
+// They are used to match fields when serialining and deserializing the data. Field numbers must be
+// positive integers within the range of 1 to 2^29 - 1, excluding the reserved range of 19000 to 19999.
+
+// When a message is serialized, the field numbers are combined with the field's wire type to create a unique
+// identifier to each field in the serialized format. The wire type is an integer representing the field's data type,
+// such as 0 for int32.
+
+// Using explicit field numbers has some advantages, such as allowing for backward compatibility when adding new
+// fields to a message type. For example, if you add a new field with a unique field number, deserializers that
+// were built with the old numbering scheme can still deserialize message serialized with the new numbering scheme, ignoring the new field.

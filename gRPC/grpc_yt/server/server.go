@@ -12,7 +12,7 @@ import (
 type testApiServer struct {
 	pb.UnimplementedTestApiServer
 }
-
+ 
 func (s *testApiServer) GetUser(ctx context.Context, req *pb.UserRequest) (*pb.UserResponse, error) {
 	return &pb.UserResponse{}, nil
 }	
