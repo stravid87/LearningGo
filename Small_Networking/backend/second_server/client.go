@@ -5,13 +5,16 @@ import (
 	"context"
 	"crypto/aes"
 	"crypto/cipher"
+	"crypto/elliptic"
 	"crypto/rand"
-	"time"
+	"encoding/hex"
 	"fmt"
 	"io"
 	"log"
 	"net/http"
 	"proto"
+	"strings"
+	"time"
 
 	"github.com/rs/cors"
 	"google.golang.org/grpc"
@@ -37,17 +40,63 @@ func main() {
 	if err != nil {
 		log.Println(err)
 	}
-	fmt.Println(resp.Body) // Random text
-
 	text := []byte(resp.Body)
-	key := []byte("this-is-a-32-byte-long-key-!!-rj")
-	
-	cipherText, err := encrypt(text, key)
+
+	// Backend server generates its keys
+	backendPrivate, backendPublic, err := GenerateKeyPair()
 	if err != nil {
-		fmt.Println(err)
+		fmt.Println("Error generating backend keys:", err)
+		return
 	}
-	
-	startServer(cipherText)
+
+	// The backend server starts an HTTP server to exchange public keys and messages
+	http.HandleFunc("/publicKey", func(w http.ResponseWriter, r *http.Request) {
+		// Send the backend server's public key to the frontend server
+		fmt.Fprint(w, hex.EncodeToString(backendPublic))
+	})
+
+	http.HandleFunc("/message", func(w http.ResponseWriter, r *http.Request) {
+		// Receive the frontend server's public key
+		publicKey := r.URL.Query().Get("publicKey")
+		// Remove any double quotes from the string
+		publicKey = strings.ReplaceAll(publicKey, "\"", "")
+		frontendPublic, err := hex.DecodeString(publicKey)
+		if err != nil {
+			fmt.Println("Error decoding frontend public key:", err)
+			return
+		}
+
+		// Generate the shared secret
+		sharedSecret, err := GenerateSharedSecret(backendPrivate, frontendPublic)
+		if err != nil {
+			fmt.Println("Error generating shared secret:", err)
+			return
+		}
+
+		// Encrypt a message
+		message := text
+		ciphertext, err := encrypt(message, sharedSecret)
+		if err != nil {
+			fmt.Println("Error encrypting message:", err)
+			return
+		}
+
+		// Start the server and send the encrypted message to the frontend server
+		startServer(ciphertext)
+	})
+	// Create a new CORS handler
+	c := cors.New(cors.Options{
+		AllowedOrigins:   []string{"http://localhost:8080"},  // Allow the frontend server to access the backend server
+		AllowedMethods:   []string{"GET", "POST", "PUT", "OPTIONS"}, // Allow these HTTP methods
+		AllowedHeaders:   []string{"Accept", "content-type"}, // Allow these HTTP headers
+		AllowCredentials: true,                               // Allow cookies
+	})
+
+	// Wrap the original handler with the CORS handler
+	handler := c.Handler(http.DefaultServeMux)
+
+	// Start the server with the CORS handler
+	http.ListenAndServe(":9091", handler)
 }
 
 func encrypt(plaintext []byte, key []byte) ([]byte, error) {
@@ -84,17 +133,36 @@ func startServer(cipherText []byte) {
 	})
 
 	c := cors.New(cors.Options{
-		AllowedOrigins:   []string{"http://localhost:8080"},
-		AllowedMethods:   []string{"GET", "OPTIONS"},
-		AllowedHeaders:   []string{"Accept", "Accept-Language", "Content-Language", "Content-Type"},
+		AllowedOrigins: []string{"http://localhost:8080"},
+		AllowedMethods: []string{"GET", "OPTIONS"},
+		AllowedHeaders: []string{"Accept", "Accept-Language", "Content-Language", "Content-Type"},
 	})
 
-	server:= &http.Server{
-		Addr: ":9091",
-		ReadTimeout: 5 * time.Minute,
+	server := &http.Server{
+		Addr:         ":9091",
+		ReadTimeout:  5 * time.Minute,
 		WriteTimeout: 10 * time.Second,
-		Handler: c.Handler(mux),
+		Handler:      c.Handler(mux),
 	}
 
 	log.Fatal(server.ListenAndServe())
+}
+
+// GenerateKeyPair generates a public and private key pair.
+func GenerateKeyPair() ([]byte, []byte, error) {
+	private, x, y, err := elliptic.GenerateKey(elliptic.P256(), rand.Reader)
+	if err != nil {
+		return nil, nil, err
+	}
+	public := elliptic.Marshal(elliptic.P256(), x, y)
+
+	return private, public, nil
+}
+
+// GenerateSharedSecret generates a shared secret from own private key and other party's public key.
+func GenerateSharedSecret(privateKey, publicKey []byte) ([]byte, error) {
+	x, y := elliptic.Unmarshal(elliptic.P256(), publicKey)
+	z, _ := elliptic.P256().ScalarMult(x, y, privateKey)
+
+	return z.Bytes(), nil
 }

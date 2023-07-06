@@ -16,6 +16,10 @@ func main() {
     }
 }
 
+// First server is running on :9090
+// Second server is running on :9091
+// Front sever is running on :8080
+
 func corsMiddleware(next http.Handler) http.Handler {
     return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
         w.Header().Set("Access-Control-Allow-Origin", "*") 
