@@ -1,0 +1,64 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <script src="wasm_exec.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.10/dist/vue.min.js"></script>
+    
+    <!-- Init the WASM module -->
+    <script>
+      (async function () {
+        const go = new Go();
+        await WebAssembly.instantiateStreaming(
+          fetch("main.wasm"),
+          go.importObject
+        ).then((result) => {
+          go.run(result.instance);
+        })
+      })();
+    </script>
+    
+    <style>
+      .full-screen-text {
+        height: 150px;
+        overflow-wrap: break-word;
+        word-wrap: break-word;
+        border: 1px solid black;
+      }
+    </style>
+  </head>
+  
+  <body>
+    <div id="encryption-and-decryption">
+      <div>
+      <div>  
+        <form @submit.prevent>
+          <textarea style="width: 500px; height: 100px;" v-model="message" type="textarea" textarea ></textarea>
+          <button @click="signMessage">Sign Message</button><br />
+        </form>
+        <div class="full-screen-text">
+          {{ signatureASN1_b64 }}
+        </div>
+      </div>
+    </div>
+  </body>
+  <footer>
+  </footer>
+
+  <script>
+    // Make it a Vue SPA
+    new Vue({
+      el: "#encryption-and-decryption",
+      data: {
+        message: "",
+        signatureASN1_b64: "",
+      },
+      methods: {
+        signMessage: async function (){
+          const result = await window.signString(this.message)
+          this.signatureASN1_b64 = result
+          console.log(result)
+        }
+      },
+    });
+  </script> 
+</html>

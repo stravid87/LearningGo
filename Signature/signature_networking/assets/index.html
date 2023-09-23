@@ -1,0 +1,182 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <script src="wasm_exec.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.10/dist/vue.min.js"></script>
+    <!-- Init the WASM module -->
+    <script>
+      (async function () {
+        const go = new Go();
+        await WebAssembly.instantiateStreaming(
+          fetch("main.wasm"),
+          go.importObject
+        ).then((result) => {
+          go.run(result.instance);
+        })
+      })();
+    </script>
+    
+    <style>
+      .full-screen-text {
+        height: 450px;
+        width: 600px;
+        overflow-wrap: break-word;
+        word-wrap: break-word;
+        border: 1px solid black;
+        position: relative;
+        margin-right: 100px;
+        margin-left: 100px;
+      }
+      .child{
+        margin: 5px;
+        padding: 2px 5px;
+        border: 1px solid black;
+        border-radius: 5px;
+        display: inline-block;
+      }
+      .parent_b {
+  text-align: right;
+}
+      .parent {
+  text-align: left;
+}
+      .child_b{
+        margin: 5px;
+        padding: 2px 5px;
+        border: 1px solid black;
+        border-radius: 5px;
+        display: inline-block;
+      }
+    </style>
+  </head>
+  
+  <body>
+    <div style="display: flex; justify-content: space-between;" id="encryption-and-decryption">
+      <div>  
+        <div style="font-weight: 600; font-size: 24px; margin-left: 100px;">Ravi<span v-if="ravi_typing" style="font-weight: 400; font-size: 16px;"> typing....</span></div>
+        <div class="full-screen-text">
+          <div class="parent_b">
+            <div v-for="item in comingData" :key="item.id" >
+              <div>
+                <div v-if="item.id % 2 == 0 && item.message" class="child_b">
+                  Me: {{ item.message }}
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="parent">
+            <div v-for="item in comingData" :key="item.id" >
+              <div>
+                <div v-if="item.id % 2 == 1 && item.message" class="child">
+                  Ravi: {{ item.message }}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div style="width: 300px; height: 50px; margin: auto;">
+          <form @submit.prevent>
+            <input style="margin-top: 20px;" v-model="message" type="text" @input="handleTyping" @blur="handleBlur"/>
+            <button @click="signMessage">Send</button><br />
+          </form>
+        </div>
+      </div>
+      <div>  
+        <div >
+          <div style="font-weight: 600; font-size: 24px; margin-left: 100px;">Javokhir<span v-if="javokhir_typing" style="font-weight: 400; font-size: 16px;"> typing....</span></div>
+          <div class="full-screen-text">
+            <div class="parent">
+              <div v-for="item in comingData" :key="item.id" >
+                <div v-if="item.id % 2 == 0 && item.message" class="child">
+                  Javokhir: {{ item.message }}
+                </div>
+              </div>
+            </div>
+            <div class="parent_b">
+              <div v-for="item in comingData" :key="item.id" >
+                <div v-if="item.id % 2 == 1 && item.message" class="child_b" >
+                  Me: {{ item.message }}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div style="width: 300px; height: 50px; margin: auto;">
+          <form @submit.prevent>
+            <input style="margin-top: 20px;"v-model="message_b" type="textarea" @input="handleTypingRavi" @blur="handleBlurRavi" />
+            <button @click="signMessage_b">Send</button><br />
+          </form>
+        </div>
+      </div>
+    </div>
+  </body>
+  <footer>
+  </footer>
+
+  <script>
+    // Make it a Vue SPA
+    new Vue({
+      el: "#encryption-and-decryption",
+      data: {
+        message: "",
+        message_b: "",
+        signatureASN1_b64: "",
+        signatureASN1_b64_b: "",
+        comingData: [
+          {
+            id: 0,
+            message: ''
+          },
+        ],
+        maxId: 0,
+        javokhir_typing: false,
+        ravi_typing: false,
+      },
+      methods: {
+        signMessage: async function (){
+          const result = await window.signString(this.message)
+          this.pushArray(result)
+          this.message = ''
+        },
+        signMessage_b: async function (){
+          const result = await window.signString(this.message_b)
+          this.pushArray(result)
+          this.message_b = ''
+        },
+        pushArray: async function (result){
+          const newItem = { id:  this.maxId, message: this.message }
+          this.comingData.push(newItem)
+          this.maxId++;
+          const newItem_b = { id:  this.maxId, message: this.message_b }
+          this.comingData.push(newItem_b)
+          this.maxId++;
+        },
+        handleTyping() {
+          this.javokhir_typing = true;
+          clearTimeout(this.typingTimer);
+          this.typingTimer = setTimeout(this.handleNotTyping, 1000); // Adjust the timeout value as per your requirement
+        },
+        handleNotTyping() {
+          this.javokhir_typing = false;
+        },
+        handleBlur() {
+          clearTimeout(this.typingTimer);
+          this.handleNotTyping();
+        },
+
+        handleTypingRavi() {
+          this.ravi_typing = true;
+          clearTimeout(this.typingTimerRavi);
+          this.typingTimerRavi = setTimeout(this.handleNotTypingRavi, 1000); // Adjust the timeout value as per your requirement
+        },
+        handleNotTypingRavi() {
+          this.ravi_typing = false;
+        },
+        handleBlurRavi() {
+          clearTimeout(this.typingTimerRavi);
+          this.handleNotTypingRavi();
+        }
+      },
+    });
+  </script> 
+</html>

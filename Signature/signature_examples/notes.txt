@@ -1,0 +1,44 @@
+The main difference between digital signatures and encryption lies in their
+purpose and functionality: 
+Purpose: 
+    Digital Signature: 
+        A digital signature is used to verify the authenticity and integrity of a message or document. It
+        provides a way to ensure that the message or document has not been tampered with
+        and that it was indeed sent by the claimed sender. 
+    Encryption: 
+        Encryption is used to protect the confidentiality of a message or data. It transforms the
+        original message into an unreadable form, known as ciphertext, using an
+        encryption algorithm. Only authorized parties with the corresponding decryption
+        key can decrypt and read the original message. 
+
+Functionality: 
+    Digital Signature:
+        A digital signature is created by applying a cryptographic hash function to the
+        message or document and then encrypting the hash value with the sender's private
+        key. The resulting signature can be decrypted using the sender's public key to
+        verify the integrity and authenticity of the message. 
+    Encryption: 
+        Encryption involves transforming the original message using an encryption algorithm and a
+        secret encryption key. The encrypted message, or ciphertext, can only be
+        decrypted using the corresponding decryption key, which is typically kept secret
+        by the intended recipient.
+
+Key Usage: 
+    Digital Signature: 
+        Digital signatures use asymmetric key cryptography, where the sender has a private key for signing and
+        the recipient has a corresponding public key for verification. The private key
+        is kept secret by the sender, while the public key is shared with others.
+    Encryption: 
+        Encryption can use either symmetric or asymmetric key cryptography.
+        Symmetric encryption uses the same key for both encryption and decryption, while
+        asymmetric encryption uses a pair of keys: a public key for encryption and a
+        private key for decryption. 
+
+In summary, digital signatures are used for
+verifying the authenticity and integrity of a message, while encryption is used
+to protect the confidentiality of a message. Digital signatures use asymmetric
+key cryptography, while encryption can use either symmetric or asymmetric key
+cryptography. 
+It's important to note that digital signatures and encryption are
+often used together in secure communication systems to provide both
+confidentiality and integrity.
