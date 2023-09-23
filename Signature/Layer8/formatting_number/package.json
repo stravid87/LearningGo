@@ -1,0 +1,22 @@
+{
+  "name": "formatting-number",
+  "version": "1.0.0",
+  "description": "You can format your number which is money, if you fill 12000, you will receive 12 000.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/NJavokhir/formatting-number.git"
+  },
+  "keywords": [
+    "formatting"
+  ],
+  "author": "Javokhir Nematov",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/NJavokhir/formatting-number/issues"
+  },
+  "homepage": "https://github.com/NJavokhir/formatting-number#readme"
+}
